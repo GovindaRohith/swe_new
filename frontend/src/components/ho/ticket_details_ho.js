@@ -3,19 +3,20 @@ import { useEffect, useState } from "react";
 
 import axios from './axios';
 
-function TicketDetails() {
+function TicketDetailsHo() {
+
     const [tickets, setTickets] = useState([]);
 
     useEffect(() => {  // set the local storage details in the usestate setTickets
-       const retrieved_data = localStorage.getItem("selectedTicket");
+       const retrieved_data = localStorage.getItem("selectedTicketHO");
         const ticket = JSON.parse(retrieved_data);
         setTickets(ticket);
-        console.log("ticket details: ", ticket);
+        console.log(ticket);
     }, []);
     
     const handleSolveClick = () => {
         // check if the ticket's reply is N/A or not
-        if (tickets.ticket_status === 0) {
+        if (tickets.ticket_status == 0) {
             const reply_typed = prompt("Please enter your reply");
             if (reply_typed === "") {
                 alert("Please enter a reply");
@@ -33,19 +34,9 @@ function TicketDetails() {
     }
     
 
-const handleFilterClick = () => {
-    const confirmed = window.confirm('Are you sure you want to filter this ticket?');
-    if (confirmed) {
-        axios.put(`http://localhost:5000/tickets_hr/${tickets.id}`, { filtered: "true", tag: tickets.tag }).then((response) => {
-            console.log(response);
-            alert('Ticket filtered successfully.');
-        });
-    }
-}
-
     return (
         <div>
-            DISPLAY TICKET DETAILS:
+            DISPLAY TICKET DETAILS HO::
             <div className="row">
                 <div className="col-md-4">
                     <div className="card">
@@ -66,10 +57,8 @@ const handleFilterClick = () => {
             </div>
             {/* put an onclick function for the Solve buttion */}
             <button type="button" class="btn btn-success" onClick={handleSolveClick}>Solve</button>
-
-            <button type="button" class="btn btn-danger" onClick={handleFilterClick}>Filter</button>
         </div>
     );
 }
 
-export default TicketDetails;
+export default TicketDetailsHo;

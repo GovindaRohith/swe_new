@@ -8,13 +8,17 @@ router.get('/', (req, res) => {
             console.error('Error fetching checkin_approval:', err);
             res.status(500).send('Error in fetching checkin_approval');
         } else {
+            console.log(results[0]);
             res.send(results);
         }
     });
 });
 
 router.post('/approve', (req, res) => {
-    const { id, start_time } = req.body;
+    // const { id, start_time } = req.body;
+    console.log('Approving checkin:', req.body);
+    const { id, start_time_formatted } = req.body;
+    console.log('Approving checkin:', id," -=-==- ", start_time_formatted);
 
     db.query("SELECT room_number FROM users WHERE id=?", [id], (err, userResults) => {
         if (err) {
@@ -29,7 +33,7 @@ router.post('/approve', (req, res) => {
                 return;
             }
 
-            db.query('DELETE FROM check_in WHERE id=? AND start_time=?', [id, start_time], (deleteErr, deleteResults) => {
+            db.query('DELETE FROM check_in WHERE id=? AND start_time=?', [id, start_time_formatted], (deleteErr, deleteResults) => {
                 if (deleteErr) {
                     console.error('Error approving checkin: Unable to delete checkin record', deleteErr);
                     res.status(500).send('Error in approving checkin');

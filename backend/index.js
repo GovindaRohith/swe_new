@@ -41,6 +41,8 @@ const roomexchange_approval = require('./src/roomexchange_approval');
 const checkin_approval = require('./src/checkin_approval');
 const tickets_ho = require("./src/tickets_ho");
 const room_exchange = require('./src/room_exchange');
+const floors_ho = require('./src/floors_ho');
+const floor_pod = require('./src/floor_pod');
 
 app.use('/login',login)
 app.use('/hr_announcements',hr_announcements)
@@ -59,7 +61,8 @@ app.use('/roomexchange_approval', roomexchange_approval);
 app.use('/checkin_approval', checkin_approval);
 app.use('/tickets_ho', tickets_ho);
 app.use('/room_exchange', room_exchange);
-
+app.use('/floors_ho', floors_ho);
+app.use('/floor_pod', floor_pod);
 
 app.listen(port, function(){
   // console.log(process.env.PORT)

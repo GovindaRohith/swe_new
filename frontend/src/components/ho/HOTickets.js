@@ -12,12 +12,22 @@ import {
 
 function DisplayTicketsHo() {   
       const [tickets, setTickets] = useState([]);
+      const [loading, setLoading] = useState(true);
+
       useEffect(() => {
         axios.get('http://localhost:5000/tickets_ho')
           .then((response) => {
             setTickets(response.data);
+            setLoading(false);
           });
       }, []);
+
+      if (loading) {
+        return <div>Loading...</div>;
+      }
+      if (tickets.length === 0) {
+        return <div>No tickets raised</div>;
+      }
 
       return (
      <div>

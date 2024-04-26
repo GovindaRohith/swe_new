@@ -15,8 +15,8 @@ const Popup = ({ checkin, onClose }) => {
                     <div className="modal-body">
                         <p><strong>Reason:</strong> {checkin.reason}</p>
                         <div className="d-flex justify-content-between align-items-end">
-                            <p><strong>Start Time:</strong> {checkin.start_time}</p>
-                            <p><strong>End Time:</strong> {checkin.end_time}</p>
+                            <p><strong>Start Time:</strong> {checkin.start_time_formatted}</p>
+                            <p><strong>End Time:</strong> {checkin.end_time_formatted}</p>
                         </div>
                         <a href={`http://localhost:5000/${checkin.file_upload}`} target="_blank" rel="noopener noreferrer" className="btn btn-primary">See proof</a>
                     </div>
@@ -29,28 +29,31 @@ const Popup = ({ checkin, onClose }) => {
 const HOCheckin = () => {
     const [checkinApproval, setCheckinApproval] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+    const [error_for, setError_for] = useState(null);
     const [selectedCheckin, setSelectedCheckin] = useState(null);
 
     useEffect(() => {
         setLoading(true);
         axios.get(`http://localhost:5000/checkin_approval`)
             .then(response => {
+                console.log(response.data);
                 setCheckinApproval(response.data);
             })
             .catch(error => {
-                setError('Error fetching checkin approval. Please try again later.');
+                console.log(error);
+                setError_for('Error fetching checkin approval. Please try again later.');
             })
             .finally(() => setLoading(false));
     }, []);
 
-    const handleApprove = (id, start_time) => {
-        axios.post(`http://localhost:5000/checkin_approval/approve`, { id, start_time })
+    const handleApprove = (id, start_time_formatted) => {
+        console.log('Approving checkin:', id, start_time_formatted);
+        axios.post(`http://localhost:5000/checkin_approval/approve`, { id, start_time_formatted })
             .then(response => {
                 setCheckinApproval(checkinApproval.filter(checkin => checkin.id !== id));
             })
             .catch(error => {
-                setError('Error approving checkin. Please try again later.');
+                setError_for('Error approving checkin. Please try again later.');
             });
     }
 
@@ -65,7 +68,7 @@ const HOCheckin = () => {
     return (
         <div className="container">
             <h1 className="mt-4">Checkin Approval</h1>
-            {error && <div className="alert alert-danger">{error}</div>}
+            {error_for && <div className="alert alert-danger">{error_for}</div>}
             {loading ? (
                 <p>Loading...</p>
             ) : checkinApproval.length === 0 ? (
@@ -80,7 +83,7 @@ const HOCheckin = () => {
                                     <p className="card-text">ID: {checkin.id}</p>
                                     <div className="d-flex justify-content-between align-items-end">
                                         <button onClick={() => handleDetails(checkin)} className="btn btn-primary">Details</button>
-                                        <button onClick={() => handleApprove(checkin.id, checkin.start_time)} className="btn btn-success">Approve</button>
+                                        <button onClick={() => handleApprove(checkin.id, checkin.start_time_formatted)} className="btn btn-success">Approve</button>
                                     </div>
                                 </div>
                             </div>

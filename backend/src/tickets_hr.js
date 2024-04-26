@@ -3,13 +3,13 @@ const router = express.Router()
 var db = require('./db');
 
 // get all tickets from tickets table
-router.get('/', function (req, res) {
-    console.log("tickets")
-    db.query('SELECT * FROM tickets where ticket_status = ?',[false] ,function (error, results, fields) {
-        console.log(results);
-        if (error) throw error;
-        res.send(results);
-        
+router.get('/:hostelBlock', function (req, res) {
+    const hostelBlock = req.params.hostelBlock;
+    db.query('SELECT tickets.*, users.room_number FROM tickets INNER JOIN users ON tickets.id = users.id WHERE ticket_status = ? AND users.room_number LIKE ?',
+    [false, hostelBlock + '%'],
+    function (error, results, fields) {
+      if (error) throw error;
+      res.send(results);
     });
 });
 
@@ -20,8 +20,10 @@ router.put('/:id', function (req, res) {
     
     const filtered = req.body.filtered;
     if(filtered === "true") {
+        const tag = req.body.tag;
+        console.log("tag_filtered : " + tag)
         console.log(filtered)
-        db.query('UPDATE tickets SET filtered = ? WHERE id = ?', [true, strID], function (error, results, fields) {
+        db.query('UPDATE tickets SET filtered = ? WHERE id = ? and tag = ?', [true, strID, tag], function (error, results, fields) {
             if (error) throw error;
             res.send(results);
         });
