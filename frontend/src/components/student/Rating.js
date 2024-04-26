@@ -8,26 +8,32 @@ const RatingPage = () => {
   const [userid, setUserid] = useState('cs21btech11063@iith.ac.in');
   const [alreadyRated, setAlreadyRated] = useState(false);
   const [prevRating, setPrevRating] = useState(0.0); // State to hold previous rating
+  const [roomNumber, setRoomNumber] = useState(null); // Assuming roomNumber is stored in state
 
   useEffect(() => {
-    // const id = localStorage.getItem('userid');
-    // setUserid(id);
+
     // Fetch hostel block details from the backend
-    var id=localStorage.getItem('userid');
+    var id = localStorage.getItem('userId');
+    var room = localStorage.getItem('roomNumber');
+    // var room=null;
+    setRoomNumber(room);
     setUserid(id);
-    axios.get(`http://localhost:5000/ratingpage/${id}`)
-      .then(response => {
+    console.log('Userid1234:', id); // Now userid is accessible here
+    console.log('Room1234:', room);
+
+    axios.get(`http://localhost:5000/ratingpage/${id}/${room}`).then(response => {
+        console.log('GET Response:', response.data);
         setAlreadyRated(response.data[2]);
         setPrevRating(response.data[1]); // Set previous rating from response
         setHostelBlocks(response.data[0]);
       })
       .catch(error => {
-        console.error('Error fetching hostel blocks:', error);
+        console.error('GET Error fetching hostel blocks:', error);
       });
   }, [userid]); // Add userid to the dependency array
 
   const handleRatingChange = (value) => {
-    
+
     setRating(value);
     handleSubmitRatings(value);
   };
@@ -38,7 +44,7 @@ const RatingPage = () => {
     console.log('Rating:', value);
     console.log('Userid:', userid); // Now userid is accessible here
     const id_rating = { userid, rating: value };
-    axios.post('http://localhost:5000/ratingpage', {id_rating,rated_bool:alreadyRated})
+    axios.post('http://localhost:5000/ratingpage', { id_rating, rated_bool: alreadyRated })
       .then(response => {
         console.log('Ratings submitted successfully:', response.data);
         // Optionally, you can reset ratings state here
@@ -67,66 +73,52 @@ const RatingPage = () => {
     return stars;
   };
   // Function to render stars based on the rating, including fractional parts
-const renderDisplayStars = (currentRating) => {
-  const stars = [];
-  const filledStars = Math.floor(currentRating); // Number of filled stars
-  const remainingStars = 5 - filledStars; // Number of empty stars
+  const renderDisplayStars = (currentRating) => {
+    const stars = [];
+    const filledStars = Math.floor(currentRating); // Number of filled stars
+    const remainingStars = 5 - filledStars; // Number of empty stars
 
-  // Push filled stars
-  for (let i = 1; i <= filledStars; i++) {
-    stars.push(
-      <FaStar
-        key={i}
-        className="star"
-        color="#ffc107" // Yellow for filled stars
-        onClick={() => handleRatingChange(i)}
-      />
-    );
-  }
+    // Push filled stars
+    for (let i = 1; i <= filledStars; i++) {
+      stars.push(
+        <FaStar
+          key={i}
+          className="star"
+          color="#ffc107" // Yellow for filled stars
+          onClick={() => handleRatingChange(i)}
+        />
+      );
+    }
 
-  // Push star with partial fill
-  if (currentRating % 1 !== 0) {
-    stars.push(
-      <FaStar
-        key={filledStars + 1}
-        className="star"
-        color="#ffc107" // Yellow for filled stars
-        style={{ clipPath: `polygon(0 0, ${currentRating % 1 * 100}% 0, ${currentRating % 1 * 100}% 100%, 0 100%)` }} // Clip path for partial fill
-        onClick={() => handleRatingChange(filledStars + 1)}
-      />
-    );
-  }
+    // Push star with partial fill
+    if (currentRating % 1 !== 0) {
+      stars.push(
+        <FaStar
+          key={filledStars + 1}
+          className="star"
+          color="#ffc107" // Yellow for filled stars
+          style={{ clipPath: `polygon(0 0, ${currentRating % 1 * 100}% 0, ${currentRating % 1 * 100}% 100%, 0 100%)` }} // Clip path for partial fill
+          onClick={() => handleRatingChange(filledStars + 1)}
+        />
+      );
+    }
 
-  // Push empty stars
-  for (let i = 1; i <= remainingStars; i++) {
-    stars.push(
-      <FaStar
-        key={filledStars + i + 1}
-        className="star"
-        color="#e4e5e9" // Grey for empty stars
-        onClick={() => handleRatingChange(filledStars + i)}
-      />
-    );
-  }
+    // Push empty stars
+    for (let i = 1; i <= remainingStars; i++) {
+      stars.push(
+        <FaStar
+          key={filledStars + i + 1}
+          className="star"
+          color="#e4e5e9" // Grey for empty stars
+          onClick={() => handleRatingChange(filledStars + i)}
+        />
+      );
+    }
 
-  return stars;
-};
+    return stars;
+  };
 
 
-// const renderDisplayStars = (currentRating) => {
-//   const stars = [];
-//   for (let i = 1; i <= 5; i++) {
-//     stars.push(
-//       <FaStar
-//         key={i}
-//         className="star"
-//         size={12} // Set the size of the stars for displaying rating
-//         color={i <= currentRating ? '#ffc107' : '#e4e5e9'} // Yellow for rated stars, grey for unrated stars
-//       />
-//     );
-//   }
-//   return stars;
-// };
 
   return (
     <div className="container">
@@ -145,9 +137,10 @@ const renderDisplayStars = (currentRating) => {
           </div>
         ))}
       </div>
+      <hr />
+      {!roomNumber && <p>Please get a room first or contact Hostel office</p>}
+      {roomNumber && !alreadyRated && (
 
-        <hr/>
-        {!alreadyRated && (
         <div className="row justify-content-center">
           <div className="col-md-4 mb-4">
             <h5>Rate the block</h5>
@@ -156,7 +149,7 @@ const renderDisplayStars = (currentRating) => {
         </div>
       )}
 
-      {alreadyRated && (
+      {roomNumber && alreadyRated && (
         <div className="row justify-content-center">
           <div className="col-md-4 mb-4">
             <h5>You have already rated this block</h5>

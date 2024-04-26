@@ -43,23 +43,23 @@ Authentication Page:
 ● Get from Announcements DB
 1. Test case passed
 ● Fill exchange form
-1. Test case 
-2. Test case 
+1. Test case passed
+2. Test case passed
 ● Update Exchange DB
-1. Test case
+1. Test case passed
 ● Fill check in/out form
 1. Test case
 2. Test case
 ● Update check-in/out DB:
 1. Test case
 ● Give Rating
-1. Test case
-2. Test case
-3. Test case
+1. Test case passed
+2. Test case passed
+3. Test case pased
 ● Get Rating
-1. Test case
+1. Test case passed
 ● Update Hostel Block DB
-1. Test case
+1. Test case passed
 ● Allocate Room
 1. Test case passed
 ● Get block details

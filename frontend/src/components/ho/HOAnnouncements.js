@@ -171,12 +171,15 @@ export default function HOAnnouncements() {
     </div>
     <button type="button" className="btn btn-primary" onClick={() => {
         // insert id into newAnnouncement
-        const id=localStorage.getItem("userId");
+        var id=localStorage.getItem('userId');
+        console.log(newAnnouncement)
+        var temp=newAnnouncement;
+        temp.id=id;
         setNewAnnouncement(prevState => ({
             ...prevState,
             id: id
         }));
-        axios.post('/hr_announcements', newAnnouncement)
+        axios.post('/hr_announcements', temp)
             .then((response) => {
                 console.log(response.data);
                 //refresh the page

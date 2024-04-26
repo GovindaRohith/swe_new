@@ -10,6 +10,7 @@ export default function RoomAllot() {
 
     useEffect(() => {
         setId(localStorage.getItem("userId"));
+        setRoomNumber(localStorage.getItem("roomNumber"));
         if(localStorage.getItem("roomNumber")==="null"){
             setRoomNumber(null);
         }
@@ -57,6 +58,9 @@ export default function RoomAllot() {
             axios.post('/room_allot', { id, roomNumber }).then(response => {
                 // reload the page
                 window.location.reload();
+                //localstorage.setItem("roomNumber",roomNumber);
+                localStorage.setItem("roomNumber", roomNumber);
+                localStorage.setItem("hostel_block", selectedBlock);
                 // also change the state of the room number in memory
             });
         }

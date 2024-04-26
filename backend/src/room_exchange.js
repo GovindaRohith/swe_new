@@ -18,7 +18,8 @@ router.post('/', (req, res) => {
     let room_exchange_description = req.body.room_exchange_description;
     let room_number_from = req.body.room_number_from;
     let room_number_to = req.body.room_number_to;
-    let query = `INSERT INTO room_exchange (id, room_exchange_description, room_number_from, room_number_to) VALUES (${id}, '${room_exchange_description}', ${room_number_from}, ${room_number_to})`;
+    console.log(req.body);
+    let query = `INSERT INTO room_exchange (id, room_exchange_description, room_number_from, room_number_to) VALUES ('${id}', '${room_exchange_description}', '${room_number_from}', '${room_number_to}')`;
     db.query(query, (err, result) => {
         if (err) {
             console.log(err);

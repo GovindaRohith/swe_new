@@ -40,6 +40,7 @@ const allotHr = require("./src/allotHr");
 const roomexchange_approval = require('./src/roomexchange_approval');
 const checkin_approval = require('./src/checkin_approval');
 const tickets_ho = require("./src/tickets_ho");
+const room_exchange = require('./src/room_exchange');
 
 app.use('/login',login)
 app.use('/hr_announcements',hr_announcements)
@@ -57,6 +58,7 @@ app.use('/allotHr', allotHr);
 app.use('/roomexchange_approval', roomexchange_approval);
 app.use('/checkin_approval', checkin_approval);
 app.use('/tickets_ho', tickets_ho);
+app.use('/room_exchange', room_exchange);
 
 
 app.listen(port, function(){

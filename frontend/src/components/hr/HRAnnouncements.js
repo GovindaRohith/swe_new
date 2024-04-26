@@ -6,7 +6,7 @@ export default function StudentHomePage() {
     const [editAnnouncement, setEditAnnouncement] = useState({});
     const [newAnnouncement, setNewAnnouncement] = useState({})
     useEffect(() => {
-        var id = 'hr.raman@iith.ac.in';
+        var id = localStorage.getItem('userId');
         axios.get(`/hr_announcements/${id}`)
             .then((response) => {
                 console.log(response.data);
@@ -43,7 +43,7 @@ export default function StudentHomePage() {
                 <p>{announcement.content}</p>
                 <p>{announcement.duration}</p>
                 
-                {announcement.id === 'hr.raman@iith.ac.in' && (
+                {announcement.id === localStorage.getItem('userId') && (
                     <button
                         onClick={() => {
                             setEditAnnouncement({
@@ -171,12 +171,15 @@ export default function StudentHomePage() {
     </div>
     <button type="button" className="btn btn-primary" onClick={() => {
         // insert id into newAnnouncement
-        const id='hr.raman@iith.ac.in';
+        var id=localStorage.getItem('userId');
+        console.log(newAnnouncement)
+        var temp=newAnnouncement;
+        temp.id=id;
         setNewAnnouncement(prevState => ({
             ...prevState,
             id: id
         }));
-        axios.post('/hr_announcements', newAnnouncement)
+        axios.post('/hr_announcements', temp)
             .then((response) => {
                 console.log(response.data);
                 //refresh the page
